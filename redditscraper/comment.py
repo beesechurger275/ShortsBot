@@ -1,5 +1,5 @@
 from typing import Any
-import kinds
+from . import kinds
 
 class RedditComment:
     def __init__(self, data:dict[str,Any], get_replies=False, del_replies=False):
@@ -18,7 +18,7 @@ class RedditComment:
         del self.replies
 
     def _filter_reply(self, comment:"RedditComment") -> bool:
-        return True
+        return True # TODO
 
     def get_replies(self) -> None:
         """Replaces ```self.replies``` dict with list made of ```RedditComment``` instances"""

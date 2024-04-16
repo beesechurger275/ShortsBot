@@ -1,7 +1,8 @@
 from typing import Union, Any
-from jsonhandler import URLJsonHandler
-import kinds
-from comment import RedditComment
+from .jsonhandler import URLJsonHandler
+from . import kinds
+from .comment import RedditComment
+import re
 
 class RedditPost:
     def __init__(self, data:Union[dict[str,Any], list[dict[str,Any]]], settings:dict={}, get_comments=False):
@@ -18,6 +19,17 @@ class RedditPost:
     def __getattr__(self, index:str) -> Any:
         return self._dict[index]
     
+    def __str__(self) -> str:
+        reg = re.findall(r"^https:\/\/reddit.com(.*)$", self.url)
+        reg = reg[0] if len(reg) > 0 else False # FIXME stupid bullshit 
+        return f"""Subreddit: {self.subreddit_name_prefixed}
+Title: {self.title}
+Author: u/{self.author}
+{'''
+''' + self.url if reg != self.permalink else ""}{'''
+''' + self.selftext if len(self.selftext) > 0 else ""}
+        """
+
     def _filter_comment(self, comment:RedditComment):
         return True # TODO
 
