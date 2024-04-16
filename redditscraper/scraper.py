@@ -1,0 +1,3 @@
+class RedditScraper:
+    def __init__(self):
+        ...
