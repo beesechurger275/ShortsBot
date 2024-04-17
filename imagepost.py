@@ -31,7 +31,7 @@ class ImagePostTemplate(Template):
 
         draw.text((90,height-55), upvote_format, font=Template.UPVOTE_FONT, fill=(0xE0,0xE0,0xE0,0xFF))
 
-        img.paste(post_img, (100,150))
+        img.paste(post_img, (100,150+((lines-1)*32)))
 
         upvote = Image.open("img_assets/upvote.png").resize((32,32))
         up_mask = Image.open("img_assets/upvote_mask.bmp").resize((32,32)).convert("L")
@@ -47,7 +47,7 @@ class ImagePostTemplate(Template):
 if __name__ == "__main__":
     from redditscraper import RedditScraper
     scraper = RedditScraper()
-    posts = random.choice(scraper.get_img_posts("furry"))
+    posts = random.choice(scraper.get_img_posts("furry", sort="top", t="week"))
 
     a = ImagePostTemplate(posts)
     img = a.draw()

@@ -39,7 +39,13 @@ class RedditScraper:
         return str_
 
     def _get_json(self, subreddit:str, **kwargs) -> dict[str,Any]:
-        return self.jsonhandler.get_json(f"https://www.reddit.com/r/{subreddit}.json{RedditScraper._kwargs_to_str(**kwargs)}")
+        sort = '' 
+        if 'sort' in kwargs: 
+            sort = "/" + kwargs['sort']
+            del kwargs['sort']
+        
+        print(f"https://www.reddit.com/r/{subreddit}{sort}.json{RedditScraper._kwargs_to_str(**kwargs)}")
+        return self.jsonhandler.get_json(f"https://www.reddit.com/r/{subreddit}{sort}.json{RedditScraper._kwargs_to_str(**kwargs)}")
     
     def _get_info_json(self, subreddit) -> dict[str,Any]:
         return self.jsonhandler.get_json(f"https://www.reddit.com/r/{subreddit}/about.json")
