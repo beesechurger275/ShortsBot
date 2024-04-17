@@ -2,6 +2,7 @@ from .jsonhandler import URLJsonHandler
 from .post import RedditPost
 from typing import Any
 from .postlist import PostList
+from .subreddit import Subreddit
 
 default_options = {
     "headers": {
@@ -27,9 +28,15 @@ class RedditScraper:
 
         return str_
 
-    def _get_json(self, subreddit:str, **kwargs) -> list[RedditPost]:
+    def _get_json(self, subreddit:str, **kwargs) -> dict[str,Any]:
         return self.jsonhandler.get_json(f"https://www.reddit.com/r/{subreddit}.json{RedditScraper._kwargs_to_str(**kwargs)}")
     
+    def _get_info_json(self, subreddit) -> dict[str,Any]:
+        return self.jsonhandler.get_json(f"https://www.reddit.com/r/{subreddit}/about.json")
+
     def get_posts(self, subreddit:str, **kwargs) -> PostList:
         json = self._get_json(subreddit, **kwargs)
         return PostList.json_list_to_postlist(json["data"]["children"])
+    
+    def get_info(self, subreddit:str) -> Subreddit:
+        return Subreddit(self._get_info_json(subreddit))

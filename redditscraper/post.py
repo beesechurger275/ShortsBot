@@ -2,6 +2,7 @@ from typing import Union, Any
 from .jsonhandler import URLJsonHandler
 from . import kinds
 from .comment import RedditComment
+from .url_to_img import url_to_img
 import re
 
 class RedditPost:
@@ -35,7 +36,7 @@ Author: u/{self.author}
 
     def get_comments(self) -> None:
         """Loads comments into the ```RedditPost``` structure."""
-        handler = URLJsonHandler() # TODO FIXME headers (fix defaults in jsonhandler.py)
+        handler = URLJsonHandler()
         json = handler.get_json(self.url[:-1] + ".json") # chop off trailing slash and add .json
 
         if len(json) < 2: raise Exception 
@@ -50,3 +51,7 @@ Author: u/{self.author}
     def get_comments_recursive(self) -> None:
         """This is a bad idea"""
         pass
+
+    def get_subreddit_icon(self):
+        a = URLJsonHandler().get_json(f"https://www.reddit.com/r/{self.subreddit}/about.json")
+        return url_to_img(a["data"]["icon_img"])

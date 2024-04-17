@@ -6,17 +6,22 @@ class Template:
     BODY_FONT = ImageFont.truetype("img_assets/Arial.ttf", 30)
     UPVOTE_FONT = ImageFont.truetype("img_assets/Arial.ttf", 25)
 
+    BACKGROUND_COLOR = (0x0F,0x0F,0x0F)
+
     def __init__(self):
         ...
 
-    def _wrap_text(self, text, width) -> tuple[str,int]:
+    @staticmethod
+    def _wrap_text(text, width) -> tuple[str,int]:
         e = textwrap.wrap(text, width)
         return ("\n".join(e), len(e))
 
-    def _format_num(self, input_:int) -> str:
+    @staticmethod
+    def _format_num(input_:int) -> str:
         return str(input_)
 
-    def _mask_profile_picture(self, image:Image.Image, size:tuple[int,int]=(50,50)) -> Image.Image:
+    @staticmethod
+    def _mask_profile_picture(image:Image.Image, size:tuple[int,int]=(50,50)) -> Image.Image:
         size = (50, 50)
         mask = Image.new('L', size, 0)
         draw = ImageDraw.Draw(mask) 

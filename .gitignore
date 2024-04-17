@@ -1,4 +1,6 @@
+__pycache__
 venv
 videos/*
 audio_save/*
 comment_img/*
+img_assets/*
