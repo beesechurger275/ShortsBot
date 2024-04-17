@@ -4,6 +4,7 @@ from . import kinds
 from .comment import RedditComment
 from .url_to_img import url_to_img
 import re
+from PIL import Image
 
 class RedditPost:
     def __init__(self, data:Union[dict[str,Any], list[dict[str,Any]]], settings:dict={}, get_comments=False):
@@ -34,6 +35,13 @@ Author: u/{self.author}
     def _filter_comment(self, comment:RedditComment):
         return True # TODO
 
+    def get_image(self) -> Image.Image:
+        reg = re.findall(r"^https:\/\/reddit.com(.*)$", self.url)
+        reg = reg[0] if len(reg) > 0 else False # FIXME still stupid bullshit 
+        if reg == self.permalink:
+            raise Exception # no image associated with this post!
+        return url_to_img(self.url)
+
     def get_comments(self) -> None:
         """Loads comments into the ```RedditPost``` structure."""
         handler = URLJsonHandler()
@@ -54,4 +62,4 @@ Author: u/{self.author}
 
     def get_subreddit_icon(self):
         a = URLJsonHandler().get_json(f"https://www.reddit.com/r/{self.subreddit}/about.json")
-        return url_to_img(a["data"]["icon_img"])
+        return url_to_img(re.findall(r"^(.*)\?.*$", a["data"]["community_icon"])[0])

@@ -1,5 +1,7 @@
 __pycache__
+redditscraper/__pycache__
 venv
 videos/*
 audio_save/*
 comment_img/*
+test.png

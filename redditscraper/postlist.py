@@ -20,6 +20,9 @@ class PostList(Sequence):
     def append(self, item:RedditPost) -> None:
         self._list.append(item)
 
+    def remove(self, item:RedditPost) -> None:
+        self._list.remove(item)
+
     @staticmethod
     def json_list_to_postlist(li:list[dict[str,Any]]) -> "PostList":
         """Pass ```data->children``` from JSON, returns PostList with posts"""
