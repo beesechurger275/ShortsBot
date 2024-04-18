@@ -47,8 +47,6 @@ class ImagePostTemplate(Template):
 if __name__ == "__main__":
     from redditscraper import RedditScraper
     scraper = RedditScraper()
-    posts = random.choice(scraper.get_img_posts("furry", sort="top", t="week"))
+    posts = random.choice(scraper.get_img_posts("furry"))
 
-    a = ImagePostTemplate(posts)
-    img = a.draw()
-    img.save("test.png")
+    ImagePostTemplate(posts).draw().save("test.png")

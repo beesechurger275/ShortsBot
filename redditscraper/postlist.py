@@ -1,6 +1,7 @@
 from .post import RedditPost
 from typing import Any
 from collections.abc import Sequence
+import random
 
 class PostList(Sequence):
     def __init__(self, li:list[RedditPost]=[]): # TODO mutable default shenanegans
@@ -22,6 +23,10 @@ class PostList(Sequence):
 
     def remove(self, item:RedditPost) -> None:
         self._list.remove(item)
+
+    def shuffle(self) -> "PostList":
+        random.shuffle(self._list)
+        return self
 
     @staticmethod
     def json_list_to_postlist(li:list[dict[str,Any]]) -> "PostList":
