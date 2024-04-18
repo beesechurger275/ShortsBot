@@ -27,6 +27,9 @@ class PostList(Sequence):
     def shuffle(self) -> "PostList":
         random.shuffle(self._list)
         return self
+    
+    def choice(self) -> RedditPost:
+        return random.choice(self._list)
 
     @staticmethod
     def json_list_to_postlist(li:list[dict[str,Any]]) -> "PostList":

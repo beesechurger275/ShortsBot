@@ -2,8 +2,11 @@ import argparse
 from redditscraper import RedditScraper
 from pair import AudioThumbnailPair
 from imagepost import ImagePostTemplate
+from textpost import TextPostTemplate
+from comment import CommentTemplate
 from tts import TextToSpeech
 from editfrompairs import video_from_pairs
+import random
 
 a = (
     "comments",
@@ -35,12 +38,32 @@ if args.type == "image":
     for post in posts:
         try: 
             ImagePostTemplate(post).draw().save(f"img_temp/img{i}.png")
-            tts(post.title).save(f"audio_temp/audio{i}.mp3")
-        except Exception as e: 
-            continue
+            tts(post.title).save(f"audio{i}.mp3")
+        except Exception as e: continue
 
         pairs.append(AudioThumbnailPair(f"img_temp/img{i}.png", f"audio_temp/audio{i}.mp3"))
         i+=1
-        if i > args.numposts: break
+        if i >= args.numposts: break
+
+
+elif args.type == "comments":
+    post = scraper.get_posts(args.subreddit).choice()
+    post.get_comments()
+    post.shuffle_comments()
+
+    TextPostTemplate(post).draw().save("img_temp/img0.png")
+    tts(post.title).save("audio0.mp3")
+    pairs.append(AudioThumbnailPair("img_temp/img0.png", "audio_temp/audio0.mp3"))
+
+    i=0
+    for comment in post.comments:
+        try:
+            CommentTemplate(comment).draw().save(f"img_temp/img{i+1}.png")
+            tts(comment.body).save(f"audio{i+1}.mp3")
+        except Exception as e: continue
+        pairs.append(AudioThumbnailPair(f"img_temp/img{i+1}.png", f"audio_temp/audio{i+1}.mp3"))
+        i+=1
+        if i >= args.numposts: break
+
 
 video_from_pairs(pairs, output=args.output)

@@ -5,6 +5,7 @@ from .comment import RedditComment
 from .url_to_img import url_to_img
 import re
 from PIL import Image
+import random
 
 class RedditPost:
     def __init__(self, data:Union[dict[str,Any], list[dict[str,Any]]], settings:dict={}, get_comments=False):
@@ -55,6 +56,9 @@ Author: u/{self.author}
             comm_obj = RedditComment(comment)
             if self._filter_comment(comm_obj):
                 self.comments.append(comm_obj)
+
+    def shuffle_comments(self) -> None:
+        random.shuffle(self.comments)
 
     def get_comments_recursive(self) -> None:
         """This is a bad idea"""
