@@ -6,7 +6,6 @@ from textpost import TextPostTemplate
 from comment import CommentTemplate
 from tts import TextToSpeech
 from editfrompairs import video_from_pairs
-import random
 
 a = (
     "comments",
