@@ -7,6 +7,8 @@ import re
 from PIL import Image
 import random
 
+class NoImage(Exception): pass
+
 class RedditPost:
     def __init__(self, data:Union[dict[str,Any], list[dict[str,Any]]], settings:dict={}, get_comments=False):
         if data["kind"] != kinds.LINK and data["kind"] != "Listing": raise Exception # reddit devs smoking crack again
@@ -16,7 +18,7 @@ class RedditPost:
 
         self.settings = settings
 
-        self.comments = []
+        self.comments = None
         if get_comments: self.get_comments()
 
     def __getattr__(self, index:str) -> Any:
@@ -24,7 +26,7 @@ class RedditPost:
     
     def __str__(self) -> str:
         reg = re.findall(r"^https:\/\/reddit.com(.*)$", self.url)
-        reg = reg[0] if len(reg) > 0 else False # FIXME stupid bullshit 
+        reg = reg[0] if len(reg) > 0 else False
         return f"""Subreddit: {self.subreddit_name_prefixed}
 Title: {self.title}
 Author: u/{self.author}
@@ -36,15 +38,20 @@ Author: u/{self.author}
     def _filter_comment(self, comment:RedditComment):
         return True # TODO
 
+    def json(self) -> dict[str,Any]:
+        return self._dict
+
     def get_image(self) -> Image.Image:
         reg = re.findall(r"^https:\/\/reddit.com(.*)$", self.url)
-        reg = reg[0] if len(reg) > 0 else False # FIXME still stupid bullshit 
+        reg = reg[0] if len(reg) > 0 else False 
         if reg == self.permalink:
-            raise Exception # no image associated with this post!
+            raise NoImage("no image associated with this post!")
         return url_to_img(self.url)
 
     def get_comments(self) -> None:
         """Loads comments into the ```RedditPost``` structure."""
+        from .postlist import PostList # TODO bad?
+        self.comments = PostList()
         handler = URLJsonHandler()
         json = handler.get_json(self.url[:-1] + ".json") # chop off trailing slash and add .json
 

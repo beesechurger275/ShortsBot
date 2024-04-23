@@ -1,5 +1,4 @@
 from .jsonhandler import URLJsonHandler
-from .post import RedditPost
 from typing import Any
 from .postlist import PostList
 from .subreddit import Subreddit
@@ -23,6 +22,10 @@ class RedditScraper:
     def __init__(self, options:dict[str,Any]=default_options):
         self.jsonhandler = URLJsonHandler(headers=options['headers']) # TODO
         self.options = options
+
+        for option in default_options.keys():
+            if option not in self.options:
+                self.options[option] = default_options[option]
 
     @staticmethod
     def _kwargs_to_str(**kwargs:str) -> str:
