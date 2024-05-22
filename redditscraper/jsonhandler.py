@@ -1,5 +1,6 @@
 import requests
 import json
+from typing import Any
 
 class HTTPCodeNot200(Exception): 
     def __init__(self) -> None:
@@ -29,3 +30,10 @@ class URLJsonHandler:
         if req.status_code == 200:
             return req.json()
         raise HTTPCodeNot200
+    
+class FileJsonHandler:
+    @staticmethod
+    def get_json(file:str) -> Any:
+        with open(file, "r") as f:
+            a = json.loads(f.read())
+        return a

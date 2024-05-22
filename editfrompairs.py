@@ -13,14 +13,13 @@ def video_from_pairs(input_:list[AudioThumbnailPair], vid_base="videos/surfers1.
     i=0
     curr_start = 0.0
     for pair in pairs:
-        stream = ffmpeg.input(vid_base, ss=str(curr_start), t=str(pair[0])).filter("fps", fps=fps)
+        # https://video.stackexchange.com/questions/12105/add-an-image-overlay-in-front-of-video-using-ffmpeg
+        
+        os.system(f"yes | ffmpeg -ss {curr_start}s -t {pair[0]}s -i {vid_base} -i {pair[1].image} \
+                  -filter_complex \"[0:v][1:v] overlay={random.randint(10,70)}:{random.randint(10,50)}\" \
+                  horrible/piece{i}.mp4")
 
-
-        stream = ffmpeg.filter([stream, ffmpeg.input(pair[1].image)], 'overlay', random.randint(10,70), random.randint(10,50))
-
-        stream.output(f"horrible/piece{i}.mp4").run(overwrite_output=True)
-
-        os.system(f"yes | ffmpeg -i horrible/piece{i}.mp4 -i {pair[1].audio} -c:a copy horrible/piece_a{i}.mp4") 
+        os.system(f"yes | ffmpeg -i horrible/piece{i}.mp4 -i {pair[1].audio} -map 0:v -map 1:a -c copy -shortest horrible/piece_a{i}.mp4") 
 
         curr_start += pair[0]
         i+=1

@@ -1,7 +1,8 @@
-from .jsonhandler import URLJsonHandler
+from .jsonhandler import URLJsonHandler, FileJsonHandler
 from typing import Any
 from .postlist import PostList
 from .subreddit import Subreddit
+from .post import RedditPost
 import re
 
 default_options = {
@@ -19,8 +20,9 @@ default_options = {
 }
 
 class RedditScraper:
-    def __init__(self, options:dict[str,Any]=default_options):
-        self.jsonhandler = URLJsonHandler(headers=options['headers']) # TODO
+    def __init__(self, options:dict[str,Any]={}):
+        h = options['headers'] if 'headers' in options else default_options['headers']
+        self.jsonhandler = URLJsonHandler(headers=h)
         self.options = options
 
         for option in default_options.keys():
@@ -49,18 +51,11 @@ class RedditScraper:
 
         return self.jsonhandler.get_json(f"https://www.reddit.com/r/{subreddit}{sort}.json{RedditScraper._kwargs_to_str(**kwargs)}")
     
-    def _get_info_json(self, subreddit) -> dict[str,Any]:
+    def _get_info_json(self, subreddit:str) -> dict[str,Any]:
         return self.jsonhandler.get_json(f"https://www.reddit.com/r/{subreddit}/about.json")
 
-    def get_posts(self, subreddit:str, **kwargs) -> PostList:
-        json = self._get_json(subreddit, **kwargs)
-        return PostList.json_list_to_postlist(json["data"]["children"])
-    
-    def get_info(self, subreddit:str) -> Subreddit:
-        return Subreddit(self._get_info_json(subreddit))
-    
-    def get_img_posts(self, subreddit:str, **kwargs):
-        posts = self.get_posts(subreddit, **kwargs)
+    def filter_img_tld(self, posts:PostList) -> PostList:
+        post:RedditPost
         for post in posts:
             a = False
             for filter in self.options["tld-filter"]:
@@ -69,7 +64,25 @@ class RedditScraper:
                     break
             if not a:
                 posts.remove(post)
-        if len(posts) < 1: 
-            print("No suitable posts found!")
-            raise Exception # no image posts found
         return posts
+
+    def get_posts(self, subreddit:str, **kwargs) -> PostList:
+        json = self._get_json(subreddit, **kwargs)
+        return PostList.json_list_to_postlist(json["data"]["children"])
+    
+    def get_info(self, subreddit:str) -> Subreddit:
+        return Subreddit(self._get_info_json(subreddit))
+    
+    def get_img_posts(self, subreddit:str, **kwargs) -> PostList:
+        posts = self.get_posts(subreddit, **kwargs)
+        posts = self.filter_img_tld(posts)
+        if len(posts) < 1: 
+            raise Exception("no image posts found")
+        return posts
+    
+    def from_json(self, file:str) -> PostList:
+        json:list[dict[str,Any]] = FileJsonHandler.get_json(file)
+        ret = PostList()
+        for i in json:
+            ret.append(RedditPost(i))
+        return ret

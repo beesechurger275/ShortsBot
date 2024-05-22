@@ -2,15 +2,12 @@ from template import Template
 from redditscraper import RedditPost
 import random
 from PIL import Image, ImageDraw
-import os
 
 class TextPostTemplate(Template):
-    def __init__(self, post:RedditPost):
-        self.post = post
-
-    def draw(self) -> Image.Image:
-        text_wrapped, lines = Template._wrap_text(self.post.title, 65)
-        upvote_format = Template._format_num(self.post.ups)
+    @staticmethod
+    def draw(post:RedditPost, *, offline=False) -> Image.Image:
+        text_wrapped, lines = Template._wrap_text(post.title, 65)
+        upvote_format = Template._format_num(post.ups)
 
         width = 1000
         height = 100+lines*32+75
@@ -18,10 +15,10 @@ class TextPostTemplate(Template):
         img = Image.new('RGBA', (width, height), Template.BACKGROUND_COLOR)
         draw = ImageDraw.Draw(img)
 
-        profile_pic, mask = self._mask_profile_picture(self.post.get_subreddit_icon())
+        profile_pic, mask = Template._mask_profile_picture(post.get_subreddit_icon())
         img.paste(profile_pic, (50,40), mask)
 
-        top_text = "r/"+self.post.subreddit+" • u/"+self.post.author
+        top_text = "r/"+post.subreddit+" • u/"+post.author
 
         draw.text((110,50), top_text, font=Template.USER_FONT, fill=(0xE0,0xE0,0xE0,0xFF))
         draw.text((50,100), text_wrapped, font=Template.BODY_FONT, fill=(0xF0,0xF0,0xF0,0xFF))

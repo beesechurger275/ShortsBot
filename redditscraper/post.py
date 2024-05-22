@@ -1,5 +1,5 @@
 from typing import Union, Any
-from .jsonhandler import URLJsonHandler
+from .jsonhandler import URLJsonHandler, FileJsonHandler
 from . import kinds
 from .comment import RedditComment
 from .url_to_img import url_to_img
@@ -20,6 +20,8 @@ class RedditPost:
 
         self.comments = None
         if get_comments: self.get_comments()
+
+        self.icon = None
 
     def __getattr__(self, index:str) -> Any:
         return self._dict[index]
@@ -52,12 +54,21 @@ Author: u/{self.author}
         """Loads comments into the ```RedditPost``` structure."""
         from .postlist import PostList # TODO bad?
         self.comments = PostList()
-        handler = URLJsonHandler()
-        json = handler.get_json(self.url[:-1] + ".json") # chop off trailing slash and add .json
 
-        if len(json) < 2: raise Exception 
+        if self.permalink[:5] != "json:": # TODO
+            handler = URLJsonHandler()
+            json = handler.get_json("https://reddit.com"+self.permalink[:-1] + ".json") # chop off trailing slash and add .json
 
-        comments = json[1]["data"]["children"]
+            if len(json) < 2: raise Exception 
+
+            comments = json[1]["data"]["children"]
+        else:
+            spl:list[str] = self.permalink.split(":")
+            json:list[dict[str,Any]] = FileJsonHandler.get_json(spl[1])
+            this:dict[str,Any] = json[int(spl[2])]
+            comments = this["data"]["comments"]
+
+
         for comment in comments:
             if comment["kind"] != kinds.COMMENT: continue # skip non-comments
             comm_obj = RedditComment(comment)
@@ -72,5 +83,17 @@ Author: u/{self.author}
         pass
 
     def get_subreddit_icon(self):
-        a = URLJsonHandler().get_json(f"https://www.reddit.com/r/{self.subreddit}/about.json")
-        return url_to_img(re.findall(r"^(.*)\?.*$", a["data"]["community_icon"])[0])
+        if self.icon is None:
+            a = URLJsonHandler().get_json(f"https://www.reddit.com/r/{self.subreddit}/about.json")
+            self.icon = url_to_img(re.findall(r"^(.*)\?.*$", a["data"]["community_icon"])[0])
+        return self.icon
+    
+    # type hinting
+    permalink:str
+    url:str
+    title:str
+    author:str
+    selftext:str
+    subreddit:str
+    subreddit_name_prefixed:str
+    ups:int

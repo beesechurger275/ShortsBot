@@ -1,0 +1,94 @@
+[
+    {
+        "kind": "t3",
+        "data": {
+            "title": "uyefuidh fuadif hudsifh uds",
+            "subreddit": "schoolappropriatecontent",
+            "subreddit_name_prefixed": "r/schoolappropriatecontent",
+            "author": "iehadsuifg",
+            
+            "selftext": "",
+
+            "ups": 5,
+            "permalink": "json:fake_imageposts.json:0",
+            "url": "https://preview.redd.it/i-get-thats-something-i-shouldnt-do-but-why-not-v0-ig3nmsk5umfc1.jpeg?auto=webp&s=230d9db2419531b6faa1bd553124d6cc471aa166",
+
+            "comments": []
+        }
+    },
+
+    {
+        "kind": "t3",
+        "data": {
+            "title": "this is the title of this post",
+            "subreddit": "schoolappropriatecontent",
+            "subreddit_name_prefixed": "r/schoolappropriatecontent",
+            "author": "sdhi",
+            
+            "selftext": "",
+
+            "ups": 15,
+            "permalink": "json:fake_imageposts.json:1",
+            "url": "https://i.ytimg.com/vi/9M7yNAElJrE/maxresdefault.jpg",
+
+            "comments": [
+                {
+                    "kind": "t1",
+                    "data": {
+                        "author": "dsadffadssdf",
+                        "body": "sddiojfoiasjdf",
+                        "ups": -3,
+
+                        "replies": [
+                            {
+                                "kind": "t1",
+                                "data": {
+                                    "author": "aknosadfiajdoiasnfsioadf",
+                                    "body": "indeed",
+                                    "ups": 500000,
+
+                                    "replies": []
+                                }
+                            }
+                        ]
+                    }
+                    
+                }
+            ]
+        }
+    },
+
+    {
+        "kind": "t3",
+        "data": {
+            "title": "skibidi",
+            "subreddit": "schoolappropriatecontent",
+            "subreddit_name_prefixed": "r/schoolappropriatecontent",
+            "author": "qwertyuiop123",
+            
+            "selftext": "",
+
+            "ups": 1,
+            "permalink": "json:fake_imageposts.json:2",
+            "url": "https://i.redd.it/n8zho94lr01d1.jpeg",
+            "comments": []
+        }
+    },
+    
+    {
+        "kind": "t3",
+        "data": {
+            "title": "excellent idea",
+            "subreddit": "schoolappropriatecontent",
+            "subreddit_name_prefixed": "r/schoolappropriatecontent",
+            "author": "jifaooisaf",
+            
+            "selftext": "",
+
+            "ups": 1,
+            "permalink": "json:fake_imageposts.json:3",
+            "url": "https://external-preview.redd.it/phone-in-syrup-v0-TVGx4us-_eUlFMGSCcnSmyVnX98OwehCxzj0t32zpl0.jpg?auto=webp&s=15c472c86ab8bd38b706f5ca63c587baacca6679",
+            "comments": []
+        }
+    }
+]

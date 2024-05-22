@@ -8,9 +8,6 @@ class Template:
 
     BACKGROUND_COLOR = (0x0F,0x0F,0x0F)
 
-    def __init__(self):
-        ...
-
     @staticmethod
     def _wrap_text(text, width) -> tuple[str,int]:
         e = textwrap.wrap(text, width)
@@ -29,5 +26,6 @@ class Template:
 
         return ImageOps.fit(image, mask.size, centering=(0.5,0.5)), mask
 
-    def draw(self) -> Image.Image:
+    @staticmethod
+    def draw() -> Image.Image:
         ...

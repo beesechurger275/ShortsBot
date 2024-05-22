@@ -21,7 +21,7 @@ class RedditComment:
         return True # TODO
 
     def get_replies(self) -> None:
-        """Replaces ```self.replies``` dict with list made of ```RedditComment``` instances"""
+        """Replaces ```self.replies``` with list made of ```RedditComment``` instances"""
         if self.replies == "": 
             self.replies = []
             return
@@ -36,3 +36,9 @@ class RedditComment:
 
     def get_replies_recursive(self):
         pass
+
+
+    # type hinting
+    body:str
+    author:str
+    ups:int

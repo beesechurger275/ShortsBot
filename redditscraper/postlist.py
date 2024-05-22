@@ -12,6 +12,9 @@ class PostList(Sequence):
     def __getitem__(self, index:int) -> RedditPost:
         return self._list[index]
     
+    def __setitem__(self, index:int, val:RedditPost) -> None:
+        self._list[index] = val
+
     def __len__(self) -> int:
         return len(self._list)
 
